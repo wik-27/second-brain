@@ -28,7 +28,7 @@ class Node:
         self.connections.append(connection)
 
     def describe(self):
-        print(f" --- Node: {self.name} ---")
+        print(f"\n --- Node: {self.name} ---")
         print(f"Category: {self.category}")
 
         if self.description:
