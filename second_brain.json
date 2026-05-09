@@ -1,0 +1,49 @@
+{
+  "Paris": {
+    "name": "Paris",
+    "category": "Geography",
+    "description": "Capital city of France",
+    "connections": [
+      {
+        "to": "France",
+        "relationship": "capital of"
+      }
+    ],
+    "metadata": {}
+  },
+  "France": {
+    "name": "France",
+    "category": "Geography",
+    "description": "Country in western Europe",
+    "connections": [
+      {
+        "to": "Paris",
+        "relationship": "contains capital"
+      }
+    ],
+    "metadata": {}
+  },
+  "Python": {
+    "name": "Python",
+    "category": "Technology",
+    "description": "A programming language",
+    "connections": [],
+    "metadata": {}
+  },
+  "Wiktoria": {
+    "name": "Wiktoria",
+    "category": "Person",
+    "description": "The architect of this second brain",
+    "connections": [
+      {
+        "to": "Python",
+        "relationship": "is learning"
+      },
+      {
+        "to": "Paris",
+        "relationship": "wants to visit"
+      }
+    ],
+    "metadata": {}
+  }
+}
