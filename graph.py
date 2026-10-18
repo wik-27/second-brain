@@ -33,6 +33,7 @@ class Graph:
         self.save()
 
     # Creating a connection between two existing nodes
+    
     def add_connection(self, from_name, to_name, relationship):
         if from_name not in self.nodes:
             print(f"Cannot connect, '{from_name}' doesn't exist")
@@ -40,6 +41,13 @@ class Graph:
         if to_name not in self.nodes:
             print(f"Cannot connect, '{to_name}' doesn't exist")
             return
+
+        # Fixing duplicate bug - 2026-10-18
+        existing = self.nodes[from_name].connections
+        for conn in existing:
+            if conn["to"] == to_name and conn["relationship"] == relationship:
+                print(f"Connection already exists: '{from_name}' -> {relationship} -> '{to_name}'")
+                return
 
         # Find the starting node and call the add_connection method
         self.nodes[from_name].add_connection(to_name, relationship)
