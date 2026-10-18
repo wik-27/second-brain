@@ -2,8 +2,13 @@
 # This file takes the graph object and renders it as an interactive map in a browser
 # Every node becomes a bubble, and every connection becomes a line between the bubbles
 
+from pathlib import Path
 from pyvis.network import Network
 from graph import Graph
+
+VSCODE_FONT = "Menlo, Monaco, 'Courier New', monospace"
+
+EXTRAS_FILE = Path(__file__).parent / "visual_extras.html"
 
 def visualise (graph, output_file="second_brain.html"):
     # takes graph object and produces an interactive html network map
@@ -13,20 +18,11 @@ def visualise (graph, output_file="second_brain.html"):
         width = "100%",
         bgcolor = "#1a1a2e",
         font_color = "white"
+        directed = True
     )
 
-    category_colours = {
-        "Geography": "#e94560",
-        "Technology": "#0f3460",
-        "Person": "#533483",
-        "Concept": "#e94560",
-    }
-
-    default_colour = "#457b9d"
-
     for node in graph.nodes.values():
-        colour = category_colours.get(node.category, default_colour)
-        size = 20 + (len(node.connections)) * 5
+        size = 28 + (len(node.connections)) * 6
         tooltip = f"{node.name}\nCategory: {node.category}"
         if node.description:
             tooltip += f"\n{node.description}"
@@ -34,9 +30,9 @@ def visualise (graph, output_file="second_brain.html"):
         net.add_node(
             node.name,
             label = node.name,
-            color = colour,
             size = size,
             title = tooltip
+            category = node.category
         )
 
     for node in graph.nodes.values():
@@ -45,23 +41,34 @@ def visualise (graph, output_file="second_brain.html"):
                 node.name,
                 conn["to"],
                 label = conn["relationship"],
-                color = "#888888"
             )
 
     net.set_options("""
     {
+        "nodes": {
+            "shape": "dot",
+            "borderWidth": 2,
+            "font": {"size': 0}
+        },
+        "edges": {
+            "arrows": {"to": {"enabled": true, "scaleFactor": 0.6}},
+            "smooth": {"type": "curvedCW", "roundness": 0.2},
+            "font": {
+                "face": "Menlo, Monaco, 'Courier New', monospace",
+                "size": 11,
+                "color": "#c8c8d8",
+                "strokeWidth": 0,
+                "background": "#1a1a2e"
+            }
+        },
         "physics": {
             "enabled": true,
-            "stabilization": {"iterations": 100},
+            "stabilization": {"iterations", 100},
             "barnesHut": {
                 "gravitationalConstant": -8000,
                 "springConstant": 0.001,
                 "springLength": 200
             }
-        },
-        "edges": {
-            "smooth": {"type": "continuous"},
-            "font": {"size": 10, "color": "#aaaaaa"}
         },
         "interaction": {
             "hover": true,
@@ -69,10 +76,15 @@ def visualise (graph, output_file="second_brain.html"):
         }
     }
     """)
-
+      
     net.write_html(output_file)
+ 
+    page = Path(output_file).read_text(encoding = "utf-8")
+    extras = EXTRAS_FILE.read_text(encoding = "utf-8")
+    page = page.replace("<\body>", extras + "\n<body>")
+    Path(output_file).write_text(page, econding = "utf-8")
+
     print(f"Visualisation saved to {output_file}")
-    print("Open that file in your browser to see your second brain!")
 
 
 # ======================================================================
