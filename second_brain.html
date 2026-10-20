@@ -233,7 +233,7 @@
             textColour: l > 58 ? "#15151f" : "#ffffff",
             color: {
                 background: hsl(base.h, s, l),
-                border: nsl(base.h, s, Math.max(l-14,12)),
+                border: hsl(base.h, s, Math.max(l-14,12)),
                 highlight: { background: hsl(base.h, s, Math.min(l +10, 90)), border: "#ffffff" },
                 hover: { background: hsl(base.h, s, Math.min(l + 6, 90)), border: hsl(base.h, s, Math.max(l -14, 12)) }
             }
@@ -246,7 +246,7 @@
     })));
 
     renderLegend(base.h, s);
-    document.querySelectorAll(".swatch").forEaach(btn =>
+    document.querySelectorAll(".swatch").forEach(btn =>
         btn.setAttribute("aria-pressed", String(btn.dataset.hex === hex)));
     document.getElementById("custom-colour").value = hex;
     try { localStorage.setItem(STORAGE_KEY, hex); } catch (e) { /* not available: ignore */ }
@@ -259,6 +259,7 @@
         btn.title = name;
         btn.setAttribute("aria-label", name);
         btn.dataset.hex = hex;
+        btn.style.background = hex;
         btn.addEventListener("click", () => applyColour(hex));
         row.appendChild(btn);
     });
